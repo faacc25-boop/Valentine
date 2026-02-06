@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Human ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff758f;
+            --bg: #fff0f3;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            width: 85%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.6);
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        @keyframes floatCard { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+
+        h1 { color: #c9184a; font-size: 1.6rem; margin: 10px 0; }
+        
+        .user-img { 
+            width: 100%; 
+            border-radius: 20px; 
+            margin: 15px 0;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #yesBtn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        #noBtn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            touch-action: none;
+        }
+
+        .gift-option {
+            background: white;
+            border: 1px solid #ffccd5;
+            border-radius: 20px;
+            padding: 12px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .gift-option:active { transform: scale(0.96); background: #fffafb; }
+        .gift-icon { font-size: 28px; background: var(--bg); padding: 10px; border-radius: 15px; }
+
+        #messageScreen, #finalScreen { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="quiz" class="container">
+        <div style="font-size: 40px;">💌</div>
+        <h1>Will you be my Valentine?</h1>
+        <p>I want to make this day special for you. ❤️</p>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="celebrate()">YES! ❤️</button>
+            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+        </div>
+    </div>
+
+    <div id="messageScreen" class="container">
+        <h1>Yay! I love you bubuuuu! 🥰</h1>
+        
+        
+        
+        <p id="teaseText" style="font-size: 0.85rem; color: #ff758f; margin-bottom: 10px;"></p>
+        <p style="font-weight: bold;">Pick your Valentine's surprise:</p>
+
+        <div class="gift-option" onclick="finalChoice('a Cozy Movie Night & Snack Haul')">
+            <span class="gift-icon">🍿</span>
+            <div style="text-align: left;">
+                <b style="color: #c9184a;">The Cozy Choice</b><br>
+                <small>Fav snacks & a movie marathon</small>
+            </div>
+        </div>
+
+        <div class="gift-option" onclick="finalChoice('a Beautiful Ring')">
+            <span class="gift-icon">💍</span>
+            <div style="text-align: left;">
+                <b style="color: #c9184a;">The Special One</b><br>
+                <small>A ring to show you're mine</small>
+            </div>
+        </div>
+
+        <div class="gift-option" onclick="finalChoice('the Ultimate Mystery Surprise')">
+            <span class="gift-icon">✨</span>
+            <div style="text-align: left;">
+                <b style="color: #c9184a;">The Big Secret</b><br>
+                <small>Something I'm keeping secret...</small>
+            </div>
+        </div>
+    </div>
+
+    <div id="finalScreen" class="container">
+        <div style="font-size: 50px;">💖</div>
+        <h1>Great Choice!</h1>
+        <p id="selectionResult" style="font-size: 1.1rem; color: #c9184a; font-weight: bold;"></p>
+        <p>You deserve the world. See you in March meri jaan! 🌹</p>
+        <div style="margin-top: 15px; font-size: 40px;">👩‍❤️‍👨</div>
+    </div>
+
+    <script>
+        let noCount = 0;
+
+        function moveButton() {
+            noCount++;
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        function celebrate() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff758f', '#ffffff'] });
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('messageScreen').style.display = 'block';
+            if(noCount > 0) {
+                document.getElementById('teaseText').innerText = `Nice try... I saw you try to click 'No' ${noCount} times! 😂`;
+            }
+        }
+
+        function finalChoice(gift) {
+            document.getElementById('messageScreen').style.display = 'none';
+            document.getElementById('finalScreen').style.display = 'block';
+            document.getElementById('selectionResult').innerText = `One ${gift} coming right up!`;
+            
+            let end = Date.now() + (2 * 1000);
+            (function frame() {
+                confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4d6d'] });
+                confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff4d6d'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+    </script>
+</body>
+</html>
